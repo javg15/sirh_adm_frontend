@@ -1,0 +1,14 @@
+<div *ngIf="currentFileUpload" class="progress">
+    <div [ngClass]="(progress.percentage<=99)?'progress-bar-warning bg-warning progress-bar':'progress-bar-success bg-success progress-bar'" role="progressbar" attr.aria-valuenow="{{progress.percentage}}" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{width:progress.percentage+'%'}">
+        {{progress.percentage}}%</div>
+</div>
+
+<label class="btn btn-default">
+<input type="hidden" [(ngModel)]="id" class="form-control" name="ID">
+<div>
+  <label class="fileContainer btn btn-light" type="button">
+    Cargar archivo ...
+    <input id="files" type="file" (change)="selectFile($event)" #fileInput   />
+  </label>
+</div>
+</label>
