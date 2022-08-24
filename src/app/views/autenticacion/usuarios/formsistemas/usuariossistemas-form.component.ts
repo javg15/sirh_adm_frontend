@@ -38,7 +38,7 @@ export class UsuariossistemasFormComponent implements OnInit, OnDestroy {
 
   actionForm: string; //acción que se ejecuta (nuevo, edición,etc)
   tituloForm: string;
-
+  successModalTimeOut: null | ReturnType<typeof setTimeout> = null;
   
 
   private elementModal: any;
@@ -159,8 +159,6 @@ export class UsuariossistemasFormComponent implements OnInit, OnDestroy {
     this.permgruposSvc.getCatalogoSegunSistema(sistema).subscribe(resp => {
       this.permgruposCat = resp.filter(a=>a.icode!="SAD");
     });
-    
-    
   }
 
   // open modal
@@ -198,7 +196,12 @@ export class UsuariossistemasFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  
+  continuarEditando(){
+    if(this.successModalTimeOut) {
+      clearTimeout(this.successModalTimeOut);
+      this.successModal.hide();
+    }
+  }
 
   // log contenido de objeto en adminulario
   get diagnosticValidate() { return JSON.stringify(this.record); }
