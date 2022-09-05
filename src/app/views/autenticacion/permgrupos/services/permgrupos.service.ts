@@ -56,9 +56,9 @@ export class PermgruposService {
       , httpOptions);
   }
 
-  public getTreePermisos(id_grupos: any): Observable<any> {
+  public getTreePermisos(id_grupos: any,sistema:string): Observable<any> {
     return this.http.post(this.API_URL + '/permgrupos/getTreePermisos',
-      { id_grupos }
+      { id_grupos, sistema }
       , httpOptions);
   }
 

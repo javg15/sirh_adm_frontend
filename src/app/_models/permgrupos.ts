@@ -10,6 +10,8 @@ export default interface Permgrupos {
 
   idesc: string;
 
+  sistema: string;
+
   id_usuarios_r: number;
 
   state: string;
@@ -31,6 +33,8 @@ export interface PermgruposInitializer {
 
   /** Default value: ''::character varying */
   idesc?: string;
+
+  sistema?: string;
 
   /** Default value: 0 */
   id_usuarios_r?: number;

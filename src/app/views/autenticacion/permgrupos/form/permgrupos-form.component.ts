@@ -1,7 +1,8 @@
 import { Component, ElementRef, Input, OnInit, ViewChild, OnDestroy, Output, EventEmitter } from '@angular/core';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { Permgrupos } from '../../../../_models';
+import { Permgrupos,Catsistemas } from '../../../../_models';
+import { CatsistemasService } from '../../../catalogos/catsistemas/services/catsistemas.service';
 import { ValidationSummaryComponent } from '../../../_shared/validation/validation-summary.component';
 import { actionsButtonSave, titulosModal } from '../../../../../environments/environment';
 import { Observable } from 'rxjs';
@@ -35,6 +36,8 @@ export class PermgruposFormComponent implements OnInit, OnDestroy {
   record: Permgrupos;
   isLoadingSearch:boolean;
   keywordSearch = 'full_name';
+  catsistemasCat:Catsistemas[];
+  editarSistema: boolean=false;
 
   nodes = []; 
   options: ITreeOptions = {
@@ -42,14 +45,19 @@ export class PermgruposFormComponent implements OnInit, OnDestroy {
   };
 
   constructor(private isLoadingService: IsLoadingService,
+    private catsistemasSvc: CatsistemasService,
       private permgruposService: PermgruposService, private el: ElementRef,
       ) {
       this.elementModal = el.nativeElement;
+
+      this.catsistemasSvc.getCatalogo().subscribe(resp => {
+        this.catsistemasCat = resp;
+      });
   }
 
   newRecord(): Permgrupos {
     return {
-      id: 0,  icode: '',   idesc: '',
+      id: 0,  icode: '',   idesc: '', sistema:'',
       created_at: new Date(),  updated_at: new Date(),
       id_usuarios_r: 0, state: ''
     };
@@ -160,7 +168,11 @@ export class PermgruposFormComponent implements OnInit, OnDestroy {
 
   }
   
-  /** treview /.\ */
+  onSelectSistema(sistema) {
+    this.permgruposService.getTreePermisos(0,sistema).subscribe(resp => {
+      this.nodes = resp;
+    });
+  }
 
   // open modal
   open(idItem: string, accion: string):  void {
@@ -170,13 +182,13 @@ export class PermgruposFormComponent implements OnInit, OnDestroy {
 
     if(idItem=="0"){
       this.record =this.newRecord();
-      this.permgruposService.getTreePermisos(0).subscribe(resp => {
-        this.nodes = resp;
-      });
+      this.editarSistema=true;
+     
     } else {
+      this.editarSistema=false;
       this.permgruposService.getRecord(idItem).subscribe(resp => {
         this.record = resp;
-        this.permgruposService.getTreePermisos(idItem).subscribe(resp => {
+        this.permgruposService.getTreePermisos(idItem,this.record.sistema).subscribe(resp => {
           this.nodes = resp;
         });
       });
